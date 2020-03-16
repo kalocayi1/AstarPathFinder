@@ -11,11 +11,11 @@ function start() {
   //add start node to open list
   open.push(startnode);
 
-  while (open.length != 0) {
+  while (open.length !== 0) {
     //loop through nodes in open and save one with lowest fcost
     var current = open[0];
+    var index = 0;
     for (var i = 0; i < open.length; i++) {
-      var index = 0;
       if (open[i].fcost < current.fcost) {
         current = open[i];
         index = i;
@@ -82,7 +82,6 @@ function start() {
               if(open[open.length-1] !== startnode && open[open.length-1] !== endnode ){
                 tdlist[current.neighbors[i].value-1].style.background = "#bab86c";
               }
-
             }
           }
         }
@@ -93,8 +92,8 @@ function start() {
   //--------------------------------------------------------------------------------------------------------------------------
   //console.log(grid);
 
-  //console.log("open list: ");
-  // console.log(open);
+  console.log("open list: ");
+   console.log(open);
 
   console.log("explored list: ");
   console.log(explored);
