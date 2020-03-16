@@ -13,8 +13,8 @@ function start() {
 
   while (open.length != 0) {
     //loop through nodes in open and save one with lowest fcost
+    var current = open[0];
     for (var i = 0; i < open.length; i++) {
-      var current = open[0];
       var index = 0;
       if (open[i].fcost < current.fcost) {
         current = open[i];
@@ -27,6 +27,9 @@ function start() {
 
     //add current to explored list
     explored.push(current);
+    if(explored[explored.length-1] !== startnode && explored[explored.length-1] !== endnode ){
+      tdlist[current.value-1].style.background = "#008000";
+    }
 
     //end node has been found, save path that algorithm took and break the loop
     if (current === endnode) {
@@ -76,6 +79,10 @@ function start() {
             //add neighbor to open array if neighbor is not already in it
             if (!open.includes(current.neighbors[i])) {
               open.push(current.neighbors[i]);
+              if(open[open.length-1] !== startnode && open[open.length-1] !== endnode ){
+                tdlist[current.neighbors[i].value-1].style.background = "#bab86c";
+              }
+
             }
           }
         }
@@ -89,6 +96,6 @@ function start() {
   //console.log("open list: ");
   // console.log(open);
 
-  //console.log("explored list: ");
-  //console.log(explored);
+  console.log("explored list: ");
+  console.log(explored);
 }

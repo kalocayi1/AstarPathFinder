@@ -30,7 +30,8 @@ var colors = {
   white: "#FFFFFF",
   blue: "#0000FF",
   purple: "#800080",
-  green: "#008000"
+  green: "#008000",
+  olive: "#bab86c"
 };
 
 var grid = Array(10);
