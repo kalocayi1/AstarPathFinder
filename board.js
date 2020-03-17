@@ -26,12 +26,25 @@ class Node {
 }
 
 var colors = {
-  black: "#000000",
-  white: "#FFFFFF",
-  blue: "#0000FF",
-  purple: "#800080",
+  black: {
+    hex: "#000000",
+    rgb: "rgb(0, 0, 0)"
+  },
+  white: {
+    hex: "#FFFFFF",
+    rgb: "rgb(255, 255, 255)"
+  },
+  blue: {
+    hex: "#0000FF",
+    rgb: "rgb(0, 0, 255)"
+  },
+  purple: {
+    hex: "#800080",
+    rgb: "rgb(128, 0, 128)"
+  },
   green: "#008000",
-  olive: "#bab86c"
+  olive: "#bab86c",
+  red: "#FF0000"
 };
 
 var grid = Array(10);
@@ -63,50 +76,45 @@ var startPlaced = false;
 var endPlaced = false;
 
 function changeColor(tdObj) {
+  var coords = getCoords(tdObj);
   if (document.getElementById("start").checked == true) {
     //blue, startnode
     if (startPlaced == false) {
-      tdObj.style.background = colors.blue;
+      tdObj.style.background = colors.blue.hex;
       startPlaced = true;
-      var x = tdObj.id.slice(0, 1);
-      var y = tdObj.id.slice(2, 3);
-      startnode = grid[x][y];
+      startnode = grid[coords[0]][coords[1]];
       startnode.gcost = startnode.hcost = startnode.fcost = 0;
-      //grid[x][y].walkable = false;
       console.log(startnode);
     }
   }
   if (document.getElementById("end").checked == true) {
     if (endPlaced == false) {
-      tdObj.style.background = colors.purple;
+      tdObj.style.background = colors.purple.hex;
       endPlaced = true;
-      var x = tdObj.id.slice(0, 1);
-      var y = tdObj.id.slice(2, 3);
-      endnode = grid[x][y];
+      var coords = getCoords(tdObj);
+      endnode = grid[coords[0]][coords[1]];
       endnode.gcost = endnode.hcost = endnode.fcost = 0;
-      //grid[x][y].walkable = false;
       console.log(endnode);
     }
   }
   if (document.getElementById("wall").checked == true) {
-    //tile is black
-    if (tdObj.style.background === "rgb(0, 0, 0)") {
-      tdObj.style.background = colors.white;
+    //tile is already black(a wall)
+    if (tdObj.style.background === colors.black.rgb) {
+      tdObj.style.background = colors.white.hex;
+      grid[coords[0]][coords[1]].walkable = true;
     }
     //tile is currently a start node (blue)
-    else if (tdObj.style.background === "rgb(0, 0, 255)") {
+    else if (tdObj.style.background === colors.blue.rgb) {
       startPlaced = false;
-      tdObj.style.background = colors.black;
+      tdObj.style.background = colors.black.hex;
     }
     //tile is currently an end node (purple)
-    else if (tdObj.style.background === "rgb(128, 0, 128)") {
+    else if (tdObj.style.background === colors.purple.rgb) {
       endPlaced = false;
-      tdObj.style.background = colors.black;
+      tdObj.style.background = colors.black.hex;
     } else {
-      tdObj.style.background = colors.black;
-      var x = tdObj.id.slice(0, 1);
-      var y = tdObj.id.slice(2, 3);
-      grid[x][y].walkable = false;
+      tdObj.style.background = colors.black.hex;
+      grid[coords[0]][coords[1]].walkable = false;
     }
   }
 
@@ -115,13 +123,11 @@ function changeColor(tdObj) {
   }
 }
 
+//assign gcost and hcost to each node based on start and end point
 function setCosts(startnode, endnode) {
-  //assign gcost and hcost to each node based on start and end point
   for (var i = 0; i < grid.length; i++) {
     for (var j = 0; j < grid.length; j++) {
-      //var g = Math.abs(startnode.value - grid[i][j].value);
       var g = Math.abs(i - startnode.xcoord) + Math.abs(j - startnode.ycoord);
-      //var h = Math.abs(endnode.value - grid[i][j].value);
       var h = Math.abs(i - endnode.xcoord) + Math.abs(j - endnode.ycoord); //manhattan distance
       var f = g + h;
       grid[i][j].gcost = g;
@@ -130,6 +136,40 @@ function setCosts(startnode, endnode) {
       grid[i][j].neighbors = getNeighbors(grid, i, j);
     }
   }
+}
+
+//color tile whenever its added to the explored list
+function colorExplored(explored, current){
+  if(explored[explored.length-1] !== startnode && explored[explored.length-1] !== endnode ){
+    tdlist[current.value-1].style.background = colors.green;
+  }
+}
+
+//color tile whenever its added to the open list
+function colorOpen(open, index, current){
+  if(open[open.length-1] !== startnode && open[open.length-1] !== endnode ){
+    tdlist[current.neighbors[index].value-1].style.background = colors.olive;
+  }
+}
+
+//color all tiles of final path taken
+function endPath(path){
+  console.log("path taken to endpoint: ");
+      console.log(path);
+      for (var i = 1; i < path.length - 1; i++) {
+        console.log(tdlist[path[i] - 1]);
+        tdlist[path[i] - 1].style.background = colors.red;
+      }
+}
+
+function getCoords(tile) {
+  var coords = [];
+  var x = tile.id.slice(0, 1);
+  coords.push(x);
+  var y = tile.id.slice(2, 3);
+  coords.push(y);
+
+  return coords;
 }
 
 //return neighboring nodes of grid[i][j]

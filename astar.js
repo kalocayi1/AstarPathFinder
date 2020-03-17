@@ -27,9 +27,8 @@ function start() {
 
     //add current to explored list
     explored.push(current);
-    if(explored[explored.length-1] !== startnode && explored[explored.length-1] !== endnode ){
-      tdlist[current.value-1].style.background = "#008000";
-    }
+    colorExplored(explored, current);
+    
 
     //end node has been found, save path that algorithm took and break the loop
     if (current === endnode) {
@@ -41,12 +40,7 @@ function start() {
         current_node = current_node.parent;
       }
       path.reverse();
-      console.log("path taken to endpoint: ");
-      console.log(path);
-      for (var i = 1; i < path.length - 1; i++) {
-        console.log(tdlist[path[i] - 1]);
-        tdlist[path[i] - 1].style.background = "#FF0000";
-      }
+      endPath(path);
       break;
     } else {
       //traverse each neighbor of current node
@@ -79,9 +73,7 @@ function start() {
             //add neighbor to open array if neighbor is not already in it
             if (!open.includes(current.neighbors[i])) {
               open.push(current.neighbors[i]);
-              if(open[open.length-1] !== startnode && open[open.length-1] !== endnode ){
-                tdlist[current.neighbors[i].value-1].style.background = "#bab86c";
-              }
+              colorOpen(open, i, current);
             }
           }
         }
