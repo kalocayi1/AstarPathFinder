@@ -8,7 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="style.css" />
   </head>
-  <body>
+  <body onload="init()">
+   <div class="ro1"> 
     <table>
       <tbody>
         <tr>
@@ -133,15 +134,24 @@
         </tr>
       </tbody>
     </table>
-    <div>
-      <input type="radio" name="node-type" id="start" /> Start
+   </div>
+   <!--- <div class="about"> 
+    About   
+  </div> -->
+
+    <div class="node-selector">
+      <input type="radio" name="node-type" id="start" /> Start 
       <input type="radio" name="node-type" id="end" /> End
       <input type="radio" name="node-type" id="wall" /> Wall
     </div>
+
     <script src="board.js"></script>
     <script src="astar.js"></script>
-    <div>
-      <button onclick="start()">Begin A*</button>
+
+    <div class="grid-buttons">
+      <button class="alg-start" onclick="start()">Begin A*</button>
+      <button class="reset-board" onclick="resetBoard()">Clear board</button>
     </div>
+
   </body>
 </html>

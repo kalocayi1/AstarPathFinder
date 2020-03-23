@@ -42,39 +42,35 @@ function start() {
       path.reverse();
       endPath(path);
       break;
-    } else {
+    } 
+    else {
       //traverse each neighbor of current node
       for (var i = 0; i < current.neighbors.length; i++) {
         //if neighbor is not traversable or has already been explored, skip
-        if (
-          explored.includes(current.neighbors[i]) ||
-          !current.neighbors[i].walkable
-        ) {
+        if ( explored.includes(current.neighbors[i]) || !current.neighbors[i].walkable ) {
           continue;
-        } else {
-          //new path to neighbor is shorter or neighbor is not in open
-          if (
-            !open.includes(current.neighbors[i]) ||
-            current.neighbors[i].fcost <
-              open.find(e => e === current.neighbors[i])
-          ) {
-            //set f_cost of neighbor
-            current.neighbors[i].gcost = current.gcost + 1;
+        } 
+        
+        //new path to neighbor is shorter or neighbor is not in open
+        if (!open.includes(current.neighbors[i]) || current.neighbors[i].gcost > 
+          current.gcost) {
 
-            current.neighbors[i].hcost =
-              Math.abs(current.neighbors[i].xcoord - endnode.xcoord) +
-              Math.abs(current.neighbors[i].ycoord - endnode.ycoord);
+          //set new cost of neighbor 
+          current.neighbors[i].gcost = current.gcost + 1;
 
-            current.neighbors[i].fcost =
-              current.neighbors[i].gcost + current.neighbors[i].hcost;
+          current.neighbors[i].hcost =
+            Math.abs(current.neighbors[i].xcoord - endnode.xcoord) +
+            Math.abs(current.neighbors[i].ycoord - endnode.ycoord);
 
-            current.neighbors[i].parent = current;
+          current.neighbors[i].fcost =
+            current.neighbors[i].gcost + current.neighbors[i].hcost;
 
-            //add neighbor to open array if neighbor is not already in it
-            if (!open.includes(current.neighbors[i])) {
-              open.push(current.neighbors[i]);
-              colorOpen(open, i, current);
-            }
+          current.neighbors[i].parent = current;
+
+          //add neighbor to open array if neighbor is not already in it
+          if (!open.includes(current.neighbors[i])) {
+            open.push(current.neighbors[i]);
+            colorOpen(open, i, current);
           }
         }
       }

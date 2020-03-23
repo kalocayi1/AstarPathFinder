@@ -47,27 +47,39 @@ var colors = {
   red: "#FF0000"
 };
 
+function init(){
+  initGrid();
+  initView();
+}
+
 var grid = Array(10);
-//initialize grid, gcost and hcost are 0 until start and endpoint are selected
-var count = 1;
-for (var i = 0; i < grid.length; i++) {
-  grid[i] = [];
-  for (var j = 0; j < grid.length; j++) {
-    grid[i][j] = new Node(count++, i, j, 0, 0, 0, [], true);
+var tdlist;
+
+function initGrid(){
+  //initialize grid, gcost and hcost are 0 until start and endpoint are selected
+  var count = 1;
+  for (var i = 0; i < grid.length; i++) {
+    grid[i] = [];
+    for (var j = 0; j < grid.length; j++) {
+      grid[i][j] = new Node(count++, i, j, 0, 0, 0, [], true);
+    }
   }
 }
 
-var tdlist = document.getElementsByTagName("td");
+function initView(){
+  tdlist = document.getElementsByTagName("td");
 
-for (var i = 0; i < tdlist.length; i++) {
-  tdlist[i].textContent = i + 1 + "";
-}
+  for (var i = 0; i < tdlist.length; i++) {
+    tdlist[i].textContent = i + 1 + "";
+  }
 
-var index = 0;
-for (var i = 0; i < 10; i++) {
-  for (var j = 0; j < 10; j++) {
-    tdlist[index].setAttribute("id", i + "," + j);
-    index++;
+  var index = 0;
+  for (var i = 0; i < 10; i++) {
+    for (var j = 0; j < 10; j++) {
+      tdlist[index].setAttribute("id", i + "," + j);
+      //tdlist[index].style.background = colors.white.hex;
+      index++;
+    }
   }
 }
 
@@ -78,12 +90,11 @@ var endPlaced = false;
 function changeColor(tdObj) {
   var coords = getCoords(tdObj);
   if (document.getElementById("start").checked == true) {
-    //blue, startnode
     if (startPlaced == false) {
       tdObj.style.background = colors.blue.hex;
       startPlaced = true;
       startnode = grid[coords[0]][coords[1]];
-      startnode.gcost = startnode.hcost = startnode.fcost = 0;
+      startnode.fcost = 0;
       console.log(startnode);
     }
   }
@@ -91,9 +102,8 @@ function changeColor(tdObj) {
     if (endPlaced == false) {
       tdObj.style.background = colors.purple.hex;
       endPlaced = true;
-      var coords = getCoords(tdObj);
       endnode = grid[coords[0]][coords[1]];
-      endnode.gcost = endnode.hcost = endnode.fcost = 0;
+      endnode.fcost = 0;
       console.log(endnode);
     }
   }
@@ -127,12 +137,12 @@ function changeColor(tdObj) {
 function setCosts(startnode, endnode) {
   for (var i = 0; i < grid.length; i++) {
     for (var j = 0; j < grid.length; j++) {
-      var g = Math.abs(i - startnode.xcoord) + Math.abs(j - startnode.ycoord);
-      var h = Math.abs(i - endnode.xcoord) + Math.abs(j - endnode.ycoord); //manhattan distance
-      var f = g + h;
-      grid[i][j].gcost = g;
-      grid[i][j].hcost = h;
-      grid[i][j].fcost = f;
+      //var g = Math.abs(i - startnode.xcoord) + Math.abs(j - startnode.ycoord);
+      //var h = Math.abs(i - endnode.xcoord) + Math.abs(j - endnode.ycoord); //manhattan distance
+      //var f = g + h;
+     // grid[i][j].gcost = g;
+      //grid[i][j].hcost = h;
+      //grid[i][j].fcost = f;
       grid[i][j].neighbors = getNeighbors(grid, i, j);
     }
   }
@@ -160,6 +170,16 @@ function endPath(path){
         console.log(tdlist[path[i] - 1]);
         tdlist[path[i] - 1].style.background = colors.red;
       }
+}
+
+function resetBoard(){
+  for(var i = 0; i < tdlist.length; i++){
+    tdlist[i].style.background = colors.white.hex;
+  }
+  startPlaced = false;
+  endPlaced = false;
+
+  initGrid();
 }
 
 function getCoords(tile) {
